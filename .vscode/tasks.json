@@ -1,0 +1,257 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build",
+            "type": "process",
+            "command": "tools/makers",
+            "args": [
+                "build"
+            ],
+            "presentation": {
+                "echo": false,
+                "reveal": "always",
+                "focus": false,
+                "panel": "dedicated",
+                "showReuseMessage": false,
+                "clear": true
+            }
+        },
+        {
+            "label": "Build Android",
+            "type": "process",
+            "command": "tools/makers",
+            "args": [
+                "build-android",
+            ],
+            "presentation": {
+                "echo": false,
+                "reveal": "always",
+                "focus": false,
+                "panel": "dedicated",
+                "showReuseMessage": false,
+                "clear": true
+            }
+        },
+       
+        {
+            "label": "Build Frontend",
+            "type": "process",
+            "command": "tools/makers",
+            "args": [
+                "frontend"
+            ],
+            "presentation": {
+                "echo": false,
+                "reveal": "always",
+                "focus": false,
+                "panel": "dedicated",
+                "showReuseMessage": false,
+                "clear": true
+            }
+        },
+        {
+            "label": "Clean",
+            "type": "process",
+            "command": "tools/makers",
+            "args": [
+                "clean"
+            ],
+            "presentation": {
+                "echo": false,
+                "reveal": "always",
+                "focus": false,
+                "panel": "dedicated",
+                "showReuseMessage": false,
+                "clear": true
+            }
+        },
+        {
+            "label": "Compile",
+            "type": "process",
+            "command": "tools/makers",
+            "args": [
+                "compile"
+            ],
+            "presentation": {
+                "echo": false,
+                "reveal": "always",
+                "focus": false,
+                "panel": "dedicated",
+                "showReuseMessage": false,
+                "clear": true
+            }
+        },
+        {
+            "label": "Format",
+            "type": "process",
+            "command": "tools/makers",
+            "args": [
+                "format"
+            ],
+            "presentation": {
+                "echo": false,
+                "reveal": "always",
+                "focus": false,
+                "panel": "dedicated",
+                "showReuseMessage": false,
+                "clear": true
+            }
+        },
+        {
+            "label": "Rebuild",
+            "type": "process",
+            "command": "tools/makers",
+            "args": [
+                "rebuild"
+            ],
+            "presentation": {
+                "echo": false,
+                "reveal": "always",
+                "focus": false,
+                "panel": "dedicated",
+                "showReuseMessage": false,
+                "clear": true
+            }
+        },
+        {
+            "label": "Release Build",
+            "type": "process",
+            "command": "tools/makers",
+            "args": [
+                "--profile",
+                "production",
+                "build"
+            ],
+            "presentation": {
+                "echo": false,
+                "reveal": "always",
+                "focus": false,
+                "panel": "dedicated",
+                "showReuseMessage": false,
+                "clear": true
+            }
+        },
+        {
+            "label": "Release Build Android",
+            "type": "process",
+            "command": "tools/makers",
+            "args": [
+                "--profile",
+                "production",
+                "build-android",
+            ],
+            "presentation": {
+                "echo": false,
+                "reveal": "always",
+                "focus": false,
+                "panel": "dedicated",
+                "showReuseMessage": false,
+                "clear": true
+            }
+        },
+        {
+            "label": "Release Build Frontend",
+            "type": "process",
+            "command": "tools/makers",
+            "args": [
+                "--profile",
+                "production",
+                "frontend"
+            ],
+            "presentation": {
+                "echo": false,
+                "reveal": "always",
+                "focus": false,
+                "panel": "dedicated",
+                "showReuseMessage": false,
+                "clear": true
+            }
+        },
+        {
+            "label": "Release Run",
+            "type": "process",
+            "command": "tools/makers",
+            "args": [
+                "--profile",
+                "production",
+                "run"
+            ],
+            "presentation": {
+                "echo": false,
+                "reveal": "always",
+                "focus": false,
+                "panel": "dedicated",
+                "showReuseMessage": false,
+                "clear": true
+            }
+        },
+
+        {
+            "label": "Run",
+            "type": "process",
+            "command": "tools/makers",
+            "args": [
+                "run"
+            ],
+            "presentation": {
+                "echo": false,
+                "reveal": "always",
+                "focus": false,
+                "panel": "dedicated",
+                "showReuseMessage": false,
+                "clear": true
+            }
+        },
+
+        {
+            "label": "Test",
+            "type": "process",
+            "command": "tools/makers",
+            "args": [
+                "test"
+            ],
+            "presentation": {
+                "echo": false,
+                "reveal": "always",
+                "focus": false,
+                "panel": "dedicated",
+                "showReuseMessage": false,
+                "clear": true
+            }
+        },
+        {
+            "label": "Watch Frontend",
+            "type": "process",
+            "command": "tools/makers",
+            "args": [
+                "frontend-watch"
+            ],
+            "presentation": {
+                "echo": false,
+                "reveal": "always",
+                "focus": false,
+                "panel": "dedicated",
+                "showReuseMessage": false,
+                "clear": true
+            }
+        },
+        {
+            "label": "Watch Run",
+            "type": "process",
+            "command": "tools/makers",
+            "args": [
+                "run-watch"
+            ],
+            "presentation": {
+                "echo": false,
+                "reveal": "always",
+                "focus": false,
+                "panel": "dedicated",
+                "showReuseMessage": false,
+                "clear": true
+            }
+        },
+
+    ]
+}

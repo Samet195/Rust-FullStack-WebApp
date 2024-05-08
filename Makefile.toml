@@ -1,0 +1,192 @@
+[config]
+skip_core_tasks = true
+
+[env]
+CARGO_MAKE_EXTEND_WORKSPACE_MAKEFILE = true
+CARGO_MAKE_WORKSPACE_SKIP_MEMBERS = ["common", "frontend"]
+CARGO_MAKE_USE_WORKSPACE_PROFILE = true
+CARGO_TARGET_DIR = "${CARGO_MAKE_CRATE_TARGET_DIRECTORY}"
+WORKSPACE = "${CARGO_MAKE_WORKSPACE_WORKING_DIRECTORY}"
+LIBRARY_EXTENSION = { source = "${CARGO_MAKE_RUST_TARGET_OS}", default_value = "unknown", mapping = { "linux" = "so", "macos" = "dylib", "windows" = "dll", "openbsd" = "so" } }
+
+[env.development]
+CARGO_PROFILE = "dev"
+CARGO_PROFILE_ANDROID = "${CARGO_PROFILE}"
+CARGO_PROFILE_WASM = "${CARGO_PROFILE}"
+CARGO_BUILD_DIR = "debug"
+CARGO_BUILD_DIR_ANDROID = "${CARGO_BUILD_DIR}"
+CARGO_BUILD_DIR_WASM = "${CARGO_BUILD_DIR}"
+
+[env.production]
+CARGO_PROFILE = "release"
+CARGO_PROFILE_ANDROID = "android"
+CARGO_PROFILE_WASM = "wasm"
+CARGO_BUILD_DIR = "${CARGO_PROFILE}"
+CARGO_BUILD_DIR_ANDROID = "${CARGO_PROFILE_ANDROID}"
+CARGO_BUILD_DIR_WASM = "${CARGO_PROFILE_WASM}"
+
+[tasks.default]
+run_task = "build"
+
+[tasks.build]
+run_task = [{ name = ["frontend", "compile"] }]
+workspace = false
+
+[tasks.compile]
+command = "cargo"
+args = ["build", "--profile", "${CARGO_PROFILE}"]
+dependencies = ["format"]
+workspace = false
+
+[tasks.run]
+cwd = "${WORKSPACE}/backend"
+command = "cargo"
+args = [
+    "run",
+    "--profile",
+    "${CARGO_PROFILE}",
+    "--no-default-features",
+    "--features",
+    "open_browser,tls",
+    "--bin",
+    "webapp",
+    "--",
+    "${@}",
+]
+dependencies = ["format", "frontend"]
+workspace = false
+
+[tasks.rebuild]
+run_task = [{ name = ["clean", "build"] }]
+workspace = false
+
+[tasks.format]
+install_crate = "rustfmt"
+command = "cargo"
+args = ["fmt", "--all"]
+workspace = false
+
+[tasks.test]
+install_crate = "cargo-test-all-featues"
+command = "cargo"
+args = ["test-all-featues"]
+dependencies = ["frontend"]
+workspace = false
+
+[tasks.clean]
+command = "cargo"
+args = ["clean"]
+workspace = false
+
+[tasks.clear]
+script = "clear"
+private = true
+workspace = false
+
+[tasks.build-android]
+env = { "PATH" = "${WORKSPACE}/backend/lib/ndk/bin:${PATH}", "AR" = "${WORKSPACE}/backend/lib/ndk/bin/llvm-ar", "TARGET" = "aarch64-linux-android" }
+script = [
+    "cargo build --lib --profile ${CARGO_PROFILE_ANDROID} --target ${TARGET} --no-default-features --features embed,internal_port,tls",
+    "cp ${CARGO_TARGET_DIR}/${TARGET}/${CARGO_BUILD_DIR_ANDROID}/*.${LIBRARY_EXTENSION} ${WORKSPACE}/backend/android/app/src/main/jniLibs/arm64-v8a",
+]
+dependencies = ["frontend"]
+workspace = false
+
+[tasks.frontend]
+workspace = false
+run_task = [
+    { name = "frontend-opt", condition = { profiles = [
+        "production",
+    ] } },
+    { name = "frontend-dev", condition = { profiles = [
+        "development",
+    ] } },
+]
+
+[tasks.frontend-opt]
+env = { "PATH" = "${WORKSPACE}/tools:${PATH}", "TARGET" = "wasm32-unknown-unknown" }
+cwd = "${WORKSPACE}/frontend"
+workspace = false
+private = true
+script = [
+    "cargo build --lib --profile ${CARGO_PROFILE_WASM} --target ${TARGET}",
+    "echo '  \\033[1;92mGenerating\\033[0m wasm bindings...'",
+    "wasm-bindgen --no-typescript --target web --out-dir ${WORKSPACE}/frontend/pkg ${CARGO_TARGET_DIR}/${TARGET}/${CARGO_BUILD_DIR_WASM}/frontend.wasm",
+    "echo '  \\033[1;92mOptimising\\033[0m wasm binary...'",
+    "wasm-opt -Oz -o ${WORKSPACE}/frontend/pkg/frontend_bg.wasm ${WORKSPACE}/frontend/pkg/frontend_bg.wasm",
+    "echo '    \\033[1;92mFinished\\033[0m wasm bindings and binary are ready.'",
+    "cp ${WORKSPACE}/frontend/pkg/* ${WORKSPACE}/backend/assets",
+]
+
+[tasks.frontend-dev]
+env = { "PATH" = "${WORKSPACE}/tools:${PATH}", "TARGET" = "wasm32-unknown-unknown" }
+cwd = "${WORKSPACE}/frontend"
+workspace = false
+private = true
+script = [
+    "cargo build --lib --profile ${CARGO_PROFILE_WASM} --target ${TARGET}",
+    "echo '  \\033[1;92mGenerating\\033[0m wasm bindings...'",
+    "wasm-bindgen --no-typescript --target web --out-dir ${WORKSPACE}/frontend/pkg ${CARGO_TARGET_DIR}/${TARGET}/${CARGO_BUILD_DIR_WASM}/frontend.wasm",
+    "echo '    \\033[1;92mFinished\\033[0m wasm bindings and binary are ready.'",
+    "cp ${WORKSPACE}/frontend/pkg/* ${WORKSPACE}/backend/assets",
+]
+
+
+[tasks.run-watch]
+cwd = "${WORKSPACE}/backend"
+workspace = false
+run_task = [
+    { name = [
+        "frontend",
+        "run-watch-impl",
+    ], fork = true, parallel = true },
+]
+
+[tasks.run-watch-impl]
+extend = "run"
+private = true
+args = [
+    "run",
+    "--profile",
+    "${CARGO_PROFILE}",
+    "--no-default-features",
+    "--bin",
+    "webapp",
+    "--",
+    "${@}",
+]
+dependencies = ["format", "clear"]
+watch = { postpone = false, watch = [
+    "${WORKSPACE}/backend",
+    "${WORKSPACE}/common",
+    "${WORKSPACE}/frontend",
+    "${WORKSPACE}/Cargo.toml",
+    "${WORKSPACE}/Makefile.toml",
+] }
+
+[tasks.frontend-watch]
+cwd = "${WORKSPACE}/frontend"
+workspace = false
+run_task = [
+    { name = [
+        "run",
+        "frontend-watch-impl",
+    ], fork = true, parallel = true },
+]
+
+[tasks.frontend-watch-impl]
+extend = "frontend"
+private = true
+dependencies = ["clear"]
+watch = { postpone = false, ignore_pattern = "${WORKSPACE}/frontend/pkg/*", watch = [
+    "${WORKSPACE}/backend",
+    "${WORKSPACE}/common",
+    "${WORKSPACE}/frontend",
+    "${WORKSPACE}/common",
+    "${WORKSPACE}/Cargo.toml",
+    "${WORKSPACE}/Makefile.toml",
+] }
+
+[tasks.publish]
+command = "cargo"
+args = ["workspaces", "publish", "--allow-branch", "develop"]

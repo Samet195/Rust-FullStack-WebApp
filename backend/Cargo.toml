@@ -1,0 +1,72 @@
+[package]
+name = "webapp-backend"
+version = "0.1.1"
+authors = ["Samet195"]
+edition.workspace = true
+readme.workspace = true
+license-file.workspace = true
+documentation.workspace = true
+repository.workspace = true
+keywords.workspace = true
+categories.workspace = true
+
+[lints]
+workspace = true
+
+[[bin]]
+name = "webapp"
+path = "src/bin/main/main.rs"
+
+[lib]
+name = "backend"
+path = "src/lib.rs"
+crate_type = ["cdylib", "rlib"]
+required-features = ["embed", "internal_port", "tls"]
+
+[features]
+default = ["embed", "tls"]
+embed = ["rust-embed"]
+internal_port = []
+open_browser = ["url", "url_open"]
+tls = ["actix-web/rustls-0_22", "rustls", "rustls-pemfile"]
+
+[dependencies]
+ntex = "*"
+
+actix-server.workspace = true
+actix-web.workspace = true
+anyhow.workspace = true
+async-trait.workspace = true
+log.workspace = true
+mime_guess.workspace = true
+once_cell.workspace = true
+pretty_env_logger.workspace = true
+rust-embed = { workspace = true, optional = true }
+rust-i18n.workspace = true
+rustls = { workspace = true, optional = true }
+rustls-pemfile = { workspace = true, optional = true }
+serde_json.workspace = true
+serde.workspace = true
+tokio.workspace = true
+
+common.workspace = true
+
+[target.'cfg(target_os="android")'.dependencies]
+android_logger.workspace = true
+jni-mangle.workspace = true
+jni.workspace = true
+surrealdb = { workspace = true, features = [
+    "kv-tikv",
+    "protocol-ws",
+    "rustls",
+] }
+
+[target.'cfg(not(target_os="android"))'.dependencies]
+surrealdb = { workspace = true, features = ["kv-tikv"] }
+url = { workspace = true, optional = true }
+url_open = { workspace = true, optional = true }
+web-view.workspace = true
+
+[build-dependencies]
+anyhow.workspace = true
+minify-js.workspace = true

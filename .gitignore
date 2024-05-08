@@ -1,0 +1,10 @@
+**/*.jks
+**/*.keystore
+backend/assets/*.js
+backend/assets/*.wasm
+backend/lib/ndk/*
+Cargo.lock
+frontend/pkg/
+target/
+
+!**/.gitkeep

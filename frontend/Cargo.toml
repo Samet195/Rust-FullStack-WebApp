@@ -1,0 +1,38 @@
+[package]
+name = "webapp-frontend"
+description = "my package description"
+version = "0.1.0"
+authors = ["Samet195"]
+edition.workspace = true
+readme.workspace = true
+license-file.workspace = true
+documentation.workspace = true
+repository.workspace = true
+keywords.workspace = true
+categories.workspace = true
+
+[lints]
+workspace = true
+
+[lib]
+name = "frontend"
+crate-type = ["cdylib"]
+
+[dependencies]
+anyhow.workspace = true
+gloo-net.workspace = true
+gloo-utils.workspace = true
+js-sys.workspace = true
+log.workspace = true
+rust-i18n.workspace = true
+serde.workspace = true
+wasm-bindgen.workspace = true
+wasm-logger.workspace = true
+yew-router.workspace = true
+yew.workspace = true
+
+common.workspace = true
+
+[build-dependencies]
+anyhow.workspace = true
+minify-js.workspace = true
