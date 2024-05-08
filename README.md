@@ -1,13 +1,12 @@
 # Rust FullStack Web App
 Cross-Platform WebAssembly Application
 
-> [!CAUTION]
+> [!NOTE]
 > This project is a prototype and a draft for application development with **Web Assembly** and **Rust**. So  it's not a real application. Also is <u>not ready for production applications yet</u>.
 
-
 ## Building
-> [!WARNING]
-> The application was developed and tested on **Ubuntu 22.04 LTS**. It is possible that some errors may occur during building on other systems.
+> [!IMPORTANT]
+> The application was developed and tested on **Ubuntu 22.04 LTS** and not adapted yet for develop on other operating systems.
 
 ### Requirements
 Technology | Link
