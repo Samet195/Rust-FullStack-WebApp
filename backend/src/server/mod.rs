@@ -17,7 +17,7 @@ mod tls;
 
 async fn index() -> impl Responder {
     HttpResponse::Ok().content_type("text/html").body(format!(
-        include!("../../assets/index.html.inc"),
+        include!("../../assets/index.html"),
         t!("title")
     ))
 }
